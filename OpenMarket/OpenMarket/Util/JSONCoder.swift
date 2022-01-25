@@ -7,16 +7,12 @@
 
 import Foundation
 
-class JSONConverter {
+class JSONCoder {
 
     private init() { }
-    static let shared = JSONConverter()
+    static let shared = JSONCoder()
 
-    private let decoder: JSONDecoder = {
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        return decoder
-    }()
+    private let decoder = JSONDecoder()
 
     func decode<T: Decodable>(from jsonData: Data) throws -> T {
         return try decoder.decode(T.self, from: jsonData)

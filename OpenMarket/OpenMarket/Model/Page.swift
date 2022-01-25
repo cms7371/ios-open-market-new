@@ -17,7 +17,7 @@ struct Page<T: Decodable>: Decodable {
     let hasPrev: Bool
     let hasNext: Bool
     let items: [T]
-    
+
     enum CodingKeys: String, CodingKey {
         case pageNumber = "page_no"
         case itemsPerPage = "items_per_page"
