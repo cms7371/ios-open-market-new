@@ -9,15 +9,15 @@ import Foundation
 
 struct ProductImage: Decodable {
     let id: Int
-    let url: String
-    let thumbnailURL: String
+    let urlString: String
+    let thumbnailURLString: String
     let succeed: Bool
     let issuedAt: String
 
     enum CodingKeys: String, CodingKey {
         case id
-        case url
-        case thumbnailURL = "thumbnail_url"
+        case urlString = "url"
+        case thumbnailURLString = "thumbnail_url"
         case succeed
         case issuedAt = "issued_at"
     }

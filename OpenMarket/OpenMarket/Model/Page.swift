@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Page<T: Decodable>: Decodable {
+struct Page<Item: Decodable>: Decodable {
     let pageNumber: Int
     let itemsPerPage: Int
     let totalCount: Int
@@ -16,7 +16,7 @@ struct Page<T: Decodable>: Decodable {
     let lastPageNumber: Int
     let hasPrev: Bool
     let hasNext: Bool
-    let items: [T]
+    let items: [Item]
 
     enum CodingKeys: String, CodingKey {
         case pageNumber = "page_no"

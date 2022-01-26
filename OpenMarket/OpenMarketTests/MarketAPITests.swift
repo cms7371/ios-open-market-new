@@ -12,33 +12,35 @@ import XCTest
 class MarketAPITests: XCTestCase {
     func testGetProducts() throws {
         // given
-        var result: [Product]?
+        var result: Data?
         let expectation = XCTestExpectation(description: "GetProductsExpectation")
         // when
-        MarketAPI.getProducts(pageNumber: 1) { products in
-            result = products
+        MarketAPI.getProducts(pageNumber: 1) { productsData in
+            result = productsData
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 3)
         // then
         XCTAssertNotNil(result)
-        // check
-        print(result as Any)
+        XCTAssertNoThrow {
+            try JSONCoder.shared.decode(from: result!) as [Product]
+        }
     }
 
     func testGetProduct() throws {
         // given
-        var result: Product?
+        var result: Data?
         let expectation = XCTestExpectation(description: "GetProductExpectation")
         // when
-        MarketAPI.getProduct(id: 1000) { product in
-            result = product
+        MarketAPI.getProduct(id: 1000) { productData in
+            result = productData
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 3)
         // then
         XCTAssertNotNil(result)
-        // check
-        print(result as Any)
+        XCTAssertNoThrow {
+            try JSONCoder.shared.decode(from: result!) as Product
+        }
     }
 }
