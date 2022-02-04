@@ -29,26 +29,27 @@ class ProductGridCell: ProductCellBase, ProductCellLayoutDelegate {
         mainStack.distribution = .equalSpacing
         mainStack.spacing = 8
         mainStack.alignment = .center
-        mainStack.layer.borderColor = UIColor.gray.cgColor
-        mainStack.layer.borderWidth = 2.0
-        mainStack.layer.cornerRadius = 5
 
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderWidth = 2.0
+        self.layer.cornerRadius = 5
         self.addSubview(mainStack)
     }
 
     func configureConstraints() {
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.3),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1.0),
-            pricesStack.heightAnchor.constraint(equalToConstant: 50)
-        ])
+        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.6).isActive = true
+        let imageViewHeightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor,
+                                                                          multiplier: 1.0)
+        imageViewHeightConstraint.isActive = true
+        imageViewHeightConstraint.priority = .defaultHigh
+        pricesStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mainStack.topAnchor.constraint(equalTo: self.topAnchor),
+            mainStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 8),
             mainStack.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             mainStack.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            mainStack.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8)
         ])
     }
 }

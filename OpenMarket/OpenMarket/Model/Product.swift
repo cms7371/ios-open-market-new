@@ -8,7 +8,8 @@
 import Foundation
 import CoreText
 
-struct Product: Decodable {
+struct Product: Decodable, Hashable {
+
     let id: Int
     let vendorID: Int
     let name: String
@@ -42,5 +43,13 @@ struct Product: Decodable {
     enum Currency: String, Decodable {
         case koreanWon = "KRW"
         case usDollar = "USD"
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static func == (lhs: Product, rhs: Product) -> Bool {
+        return lhs.id == rhs.id
     }
 }
