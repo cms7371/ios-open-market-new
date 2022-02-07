@@ -9,29 +9,20 @@ import UIKit
 class ProductsViewController: UIViewController {
 
     var displayStyleControlView: UISegmentedControl!
+    var collectionView: UICollectionView!
+
     var isList = true
-    var products: [Product]? {
-        willSet(newProducts) {
-            guard let products = newProducts else {
-                return
-            }
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Product>()
-            snapshot.appendSections([.main])
-            snapshot.appendItems(products)
-            dataSource?.apply(snapshot)
-        }
-    }
+    var products: [Product] = []
+    var dataSource: UICollectionViewDiffableDataSource<Section, Product>!
+    var dataSourceSnapshot: NSDiffableDataSourceSnapshot<Section, Product>!
 
     enum Section {
         case main
     }
 
-    var collectionView: UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, Product>?
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureDisplayStyleView()
+        configureDisplayStyleControlView()
         configureNavigationItem()
         configureHierarchy()
         configureDataSource()
@@ -39,7 +30,7 @@ class ProductsViewController: UIViewController {
 }
 
 extension ProductsViewController {
-    func configureDisplayStyleView() {
+    func configureDisplayStyleControlView() {
         displayStyleControlView = UISegmentedControl(items: ["LIST", "GRID"])
         displayStyleControlView.selectedSegmentTintColor = .systemBlue
         displayStyleControlView.selectedSegmentIndex = 0
@@ -69,9 +60,6 @@ extension ProductsViewController {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(collectionView)
     }
-}
-
-extension ProductsViewController {
 
     func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { _, _ in
@@ -92,19 +80,20 @@ extension ProductsViewController {
             if !self.isList {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
             }
-            // section.contentInsets
             return section
         }
     }
 
     func configureDataSource() {
         let listCellRegistration = UICollectionView
-            .CellRegistration<ProductListCell, Product> { cell, _, product in
-                cell.updateContent(product: product)
+            .CellRegistration<ProductListCell, Product> { cell, indexPath, product in
+                cell.updateContent(product: product, indexPath: indexPath)
+                cell.lazyUpdateThumbnail(fromURL: product.thumbnailURLString, indexPath: indexPath)
         }
         let gridCellRegistration = UICollectionView
-            .CellRegistration<ProductGridCell, Product> { cell, _, product in
-                cell.updateContent(product: product)
+            .CellRegistration<ProductGridCell, Product> { cell, indexPath, product in
+                cell.updateContent(product: product, indexPath: indexPath)
+                cell.lazyUpdateThumbnail(fromURL: product.thumbnailURLString, indexPath: indexPath)
         }
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
                                                         cellProvider: { collectionView, indexPath, product in
@@ -112,15 +101,42 @@ extension ProductsViewController {
             collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: product) :
             collectionView.dequeueConfiguredReusableCell(using: gridCellRegistration, for: indexPath, item: product)
         })
-        // TODO: 데이터 처리 로직 만들어야함
-        MarketAPI.getProducts(pageNumber: 1) { productsData in
+        dataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Product>()
+        dataSourceSnapshot.appendSections([.main])
+        updateProducts()
+    }
+
+    func updateProducts() {
+        MarketAPI.getProducts(pageNumber: 1, itemCount: 100) { productsData in
             do {
                 let productPage: ProductPage = try JSONCoder.shared.decode(from: productsData)
                 DispatchQueue.main.async {
-                    self.products = productPage.products
+                    self.products.append(contentsOf: productPage.products)
+                    self.dataSourceSnapshot.appendItems(productPage.products)
+                    self.dataSource.apply(self.dataSourceSnapshot)
                 }
             } catch {
                 fatalError("ProductsViewController: JSON parsing error")
+            }
+        }
+    }
+}
+
+extension ProductCellBase {
+    func lazyUpdateThumbnail(fromURL: String, indexPath: IndexPath) {
+        DispatchQueue.global(qos: .userInteractive).async {
+            guard let thumbnailURL = URL(string: fromURL) else {
+                print("WARNING:ProductsViewController.lazyUpdateThumbnail, fail to initializing URL from url string")
+                return
+            }
+            do {
+                let thumbnailData = try Data(contentsOf: thumbnailURL, options: .alwaysMapped)
+                let thumbnailImage = UIImage(data: thumbnailData)
+                DispatchQueue.main.async {
+                    self.setThumbnailImage(thumbnailImage!, indexPath: indexPath)
+                }
+            } catch {
+                print("WARNING:ProductsViewController.lazyUpdateThumbnail, \(error.localizedDescription)")
             }
         }
     }

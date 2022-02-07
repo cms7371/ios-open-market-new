@@ -36,6 +36,8 @@ class ProductCellBase: UICollectionViewCell {
     var stockLabel: UILabel!
     var showDetailMark: UIImageView!
 
+    var indexPath: IndexPath?
+
     func configureContent() {
         thumbnailImageView = UIImageView()
         loadingIndicatorView = UIActivityIndicatorView(style: .medium)
@@ -56,7 +58,8 @@ class ProductCellBase: UICollectionViewCell {
         showDetailMark.tintColor = .opaqueSeparator
     }
 
-    func updateContent(product: Product) {
+    func updateContent(product: Product, indexPath: IndexPath) {
+        self.indexPath = indexPath
         nameLabel.text = product.name
         if product.stock > 0 {
             stockLabel.text = "잔여수량 : \(product.stock)"
@@ -79,9 +82,11 @@ class ProductCellBase: UICollectionViewCell {
         priceLabel.attributedText = attributedPriceString
     }
 
-    func setThumbnailImage(_ image: UIImage) {
-        loadingIndicatorView.stopAnimating()
-        thumbnailImageView.image = image
+    func setThumbnailImage(_ image: UIImage, indexPath: IndexPath) {
+        if indexPath == self.indexPath {
+            loadingIndicatorView.stopAnimating()
+            thumbnailImageView.image = image
+        }
     }
 
     override func prepareForReuse() {

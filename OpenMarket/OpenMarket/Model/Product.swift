@@ -13,7 +13,7 @@ struct Product: Decodable, Hashable {
     let id: Int
     let vendorID: Int
     let name: String
-    let thumbnail: String
+    let thumbnailURLString: String
     let currency: Currency
     let price: Float
     let bargainPrice: Float
@@ -28,7 +28,7 @@ struct Product: Decodable, Hashable {
         case id
         case vendorID = "vendor_id"
         case name
-        case thumbnail
+        case thumbnailURLString = "thumbnail"
         case currency
         case price
         case bargainPrice = "bargain_price"

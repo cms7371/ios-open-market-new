@@ -102,11 +102,11 @@ struct ProductListCell_Previews: PreviewProvider {
         UIViewPreview {
             let previewCell = ProductListCell()
             previewCell.thumbnailImageView.image = UIImage(systemName: "square")
-            let product = Product(id: 0, vendorID: 0, name: "상품", thumbnail: "",
+            let product = Product(id: 0, vendorID: 0, name: "상품", thumbnailURLString: "",
                                   currency: .koreanWon, price: 10.0, bargainPrice: 10.0,
                                   discountedPrice: 90.0, stock: 10, createdAt: "",
                                   issuedAt: "", images: nil, vendor: nil)
-            previewCell.updateContent(product: product)
+            previewCell.updateContent(product: product, indexPath: IndexPath())
             return previewCell
         }.previewDevice(PreviewDevice(rawValue: "iPhone 11"))
     }
