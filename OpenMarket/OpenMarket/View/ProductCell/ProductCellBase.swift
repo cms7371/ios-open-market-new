@@ -12,6 +12,10 @@ class ProductCellBase: UICollectionViewCell {
 
     weak var layoutDelegate: ProductCellLayoutDelegate?
 
+    func setLayoutDelegate() {
+        fatalError("ProductBaseCell: setLayoutDelegate must be overriden")
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureContent()
@@ -24,8 +28,8 @@ class ProductCellBase: UICollectionViewCell {
         super.init(coder: coder)
     }
 
-    // TODO: 로딩 마크 추가하기
-    var imageView: UIImageView!
+    var thumbnailImageView: UIImageView!
+    var loadingIndicatorView: UIActivityIndicatorView!
     var nameLabel: UILabel!
     var priceLabel: UILabel!
     var discountedPriceLabel: UILabel!
@@ -33,7 +37,10 @@ class ProductCellBase: UICollectionViewCell {
     var showDetailMark: UIImageView!
 
     func configureContent() {
-        imageView = UIImageView()
+        thumbnailImageView = UIImageView()
+        loadingIndicatorView = UIActivityIndicatorView(style: .medium)
+        loadingIndicatorView.hidesWhenStopped = true
+        loadingIndicatorView.startAnimating()
         nameLabel = UILabel()
         nameLabel.numberOfLines = 1
         priceLabel = UILabel()
@@ -47,10 +54,6 @@ class ProductCellBase: UICollectionViewCell {
             $0?.textColor = UIColor.gray
         }
         showDetailMark.tintColor = .opaqueSeparator
-    }
-
-    func setLayoutDelegate() {
-        fatalError("ProductBaseCell: setLayoutDelegate must be overriden")
     }
 
     func updateContent(product: Product) {
@@ -76,7 +79,14 @@ class ProductCellBase: UICollectionViewCell {
         priceLabel.attributedText = attributedPriceString
     }
 
+    func setThumbnailImage(_ image: UIImage) {
+        loadingIndicatorView.stopAnimating()
+        thumbnailImageView.image = image
+    }
+
     override func prepareForReuse() {
+        loadingIndicatorView.startAnimating()
+        thumbnailImageView.image = nil
         stockLabel.textColor = .gray
         discountedPriceLabel.isHidden = true
     }

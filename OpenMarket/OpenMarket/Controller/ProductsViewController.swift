@@ -50,10 +50,10 @@ extension ProductsViewController {
         displayStyleControlView.layer.borderWidth = 1.5
         displayStyleControlView.layer.borderColor = UIColor.systemBlue.cgColor
         displayStyleControlView.addTarget(self, action:
-                                            #selector(touchUpDisplayStyleControlView(_:)), for: .valueChanged)
+                                            #selector(changedValueDisplayStyleControlView(_:)), for: .valueChanged)
     }
 
-    @objc private func touchUpDisplayStyleControlView(_ sender: Any) {
+    @objc private func changedValueDisplayStyleControlView(_ sender: Any) {
         isList = displayStyleControlView.selectedSegmentIndex == 0
         collectionView.reloadData()
     }
@@ -89,7 +89,9 @@ extension ProductsViewController {
 
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = 8
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+            if !self.isList {
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+            }
             // section.contentInsets
             return section
         }

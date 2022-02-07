@@ -18,30 +18,42 @@ class ProductGridCell: ProductCellBase, ProductCellLayoutDelegate {
         layoutDelegate = self
     }
 
+    override func configureContent() {
+        super.configureContent()
+        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderWidth = 2.0
+        self.layer.cornerRadius = 5
+    }
+
     func configureHierarchy() {
         pricesStack = UIStackView(arrangedSubviews: [priceLabel, discountedPriceLabel])
         pricesStack.axis = .vertical
         pricesStack.distribution = .fillEqually
         pricesStack.alignment = .center
 
-        mainStack = UIStackView(arrangedSubviews: [imageView, nameLabel, pricesStack, stockLabel])
+        mainStack = UIStackView(arrangedSubviews: [thumbnailImageView, nameLabel, pricesStack, stockLabel])
         mainStack.axis = .vertical
         mainStack.distribution = .equalSpacing
         mainStack.spacing = 8
         mainStack.alignment = .center
 
-        self.layer.borderColor = UIColor.lightGray.cgColor
-        self.layer.borderWidth = 2.0
-        self.layer.cornerRadius = 5
         self.addSubview(mainStack)
+        self.addSubview(loadingIndicatorView)
     }
 
     func configureConstraints() {
-        imageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.6).isActive = true
-        let imageViewHeightConstraint = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor,
-                                                                          multiplier: 1.0)
-        imageViewHeightConstraint.isActive = true
-        imageViewHeightConstraint.priority = .defaultHigh
+        thumbnailImageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.6).isActive = true
+        let thumbnailImageViewHeightConstraint =
+            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 1.0)
+        thumbnailImageViewHeightConstraint.isActive = true
+        thumbnailImageViewHeightConstraint.priority = .defaultHigh
+
+        loadingIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            loadingIndicatorView.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor),
+            loadingIndicatorView.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor)
+        ])
+
         pricesStack.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         mainStack.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +73,7 @@ struct ProductGridCell_Previews: PreviewProvider {
     static var previews: some View {
         UIViewPreview {
             let previewCell = ProductGridCell()
-            previewCell.imageView.image = UIImage(systemName: "square")
+            previewCell.thumbnailImageView.image = UIImage(systemName: "square")
             let product = Product(id: 0, vendorID: 0, name: "상품", thumbnail: "",
                                   currency: .koreanWon, price: 1000.0, bargainPrice: 10.0,
                                   discountedPrice: 90.0, stock: 10, createdAt: "",
