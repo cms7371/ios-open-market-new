@@ -8,11 +8,12 @@
 import Foundation
 import CoreText
 
-struct Product: Decodable {
+struct Product: Decodable, Hashable {
+
     let id: Int
     let vendorID: Int
     let name: String
-    let thumbnail: String
+    let thumbnailURLString: String
     let currency: Currency
     let price: Float
     let bargainPrice: Float
@@ -27,7 +28,7 @@ struct Product: Decodable {
         case id
         case vendorID = "vendor_id"
         case name
-        case thumbnail
+        case thumbnailURLString = "thumbnail"
         case currency
         case price
         case bargainPrice = "bargain_price"
@@ -42,5 +43,13 @@ struct Product: Decodable {
     enum Currency: String, Decodable {
         case koreanWon = "KRW"
         case usDollar = "USD"
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static func == (lhs: Product, rhs: Product) -> Bool {
+        return lhs.id == rhs.id
     }
 }

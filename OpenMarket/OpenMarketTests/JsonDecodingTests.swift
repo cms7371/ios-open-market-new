@@ -24,9 +24,9 @@ class JsonDecodeingTests: XCTestCase {
         // given and when
         let jsonData = NSDataAsset(name: "json_pageExample")!.data
         // then
-        XCTAssertNoThrow(try JSONCoder.shared.decode(from: jsonData) as Page<Product>)
+        XCTAssertNoThrow(try JSONCoder.shared.decode(from: jsonData) as ProductPage)
         // check
-        let page: Page<Product> = try JSONCoder.shared.decode(from: jsonData)
+        let page: ProductPage = try JSONCoder.shared.decode(from: jsonData)
         print(page)
     }
 }

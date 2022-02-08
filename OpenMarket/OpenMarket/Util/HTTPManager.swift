@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import UIKit
 
 class HTTPManager {
     private init() { }
 
-    static func get(url: String, path: [String]?, query: [String: Any]?, completionHandler: @escaping (Data) -> Void) {
+    static func getData(url: String, path: [String]?, query: [String: Any]?,
+                        completionHandler: @escaping (Data) -> Void) {
         var assembledURL = url
         path?.forEach { assembledURL += "/\($0)" }
         if let query = query {
