@@ -10,53 +10,49 @@ import CoreData
 
 class ProductCellBase: UICollectionViewCell {
 
-    weak var layoutDelegate: ProductCellLayoutDelegate?
+    var thumbnailImageView: UIImageView = UIImageView()
+    var loadingIndicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = true
+        indicator.startAnimating()
+        return indicator
+    }()
 
-    func setLayoutDelegate() {
-        fatalError("ProductBaseCell: setLayoutDelegate must be overriden")
-    }
+    var nameLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        return label
+    }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        configureContent()
-        setLayoutDelegate()
-        layoutDelegate?.configureHierarchy()
-        layoutDelegate?.configureConstraints()
-    }
+    var priceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.textColor = UIColor.gray
+        return label
+    }()
 
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-    }
+    var discountedPriceLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.textColor = UIColor.gray
+        label.isHidden = true
+        return label
+    }()
 
-    var thumbnailImageView: UIImageView!
-    var loadingIndicatorView: UIActivityIndicatorView!
-    var nameLabel: UILabel!
-    var priceLabel: UILabel!
-    var discountedPriceLabel: UILabel!
-    var stockLabel: UILabel!
-    var showDetailMark: UIImageView!
+    var stockLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.textColor = UIColor.gray
+        return label
+    }()
+
+    var showDetailMark: UIImageView = {
+        let imageView = UIImageView(image: UIImage.init(systemName: "chevron.right"))
+        imageView.tintColor = .opaqueSeparator
+        return imageView
+    }()
 
     var indexPath: IndexPath?
-
-    func configureContent() {
-        thumbnailImageView = UIImageView()
-        loadingIndicatorView = UIActivityIndicatorView(style: .medium)
-        loadingIndicatorView.hidesWhenStopped = true
-        loadingIndicatorView.startAnimating()
-        nameLabel = UILabel()
-        nameLabel.numberOfLines = 1
-        priceLabel = UILabel()
-        discountedPriceLabel = UILabel()
-        discountedPriceLabel.isHidden = true
-        stockLabel = UILabel()
-        showDetailMark = UIImageView(image: UIImage.init(systemName: "chevron.right"))
-        nameLabel.font = UIFont.preferredFont(forTextStyle: .title1)
-        [priceLabel, discountedPriceLabel, stockLabel].forEach {
-            $0?.font = UIFont.preferredFont(forTextStyle: .body)
-            $0?.textColor = UIColor.gray
-        }
-        showDetailMark.tintColor = .opaqueSeparator
-    }
 
     func updateContent(product: Product, indexPath: IndexPath) {
         self.indexPath = indexPath

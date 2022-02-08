@@ -7,31 +7,37 @@
 
 import UIKit
 
-class ProductGridCell: ProductCellBase, ProductCellLayoutDelegate {
+class ProductGridCell: ProductCellBase {
 
     static var reuseIdentifier: String = "ProductGridCell"
 
-    var mainStack: UIStackView!
-    var pricesStack: UIStackView!
+    var mainStack = UIStackView()
+    var pricesStack = UIStackView()
 
-    override func setLayoutDelegate() {
-        layoutDelegate = self
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureOutline()
+        configureHierarchy()
+        configureConstraints()
     }
 
-    override func configureContent() {
-        super.configureContent()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func configureOutline() {
         self.layer.borderColor = UIColor.lightGray.cgColor
         self.layer.borderWidth = 2.0
         self.layer.cornerRadius = 5
     }
 
     func configureHierarchy() {
-        pricesStack = UIStackView(arrangedSubviews: [priceLabel, discountedPriceLabel])
+        [priceLabel, discountedPriceLabel].forEach { pricesStack.addArrangedSubview($0) }
         pricesStack.axis = .vertical
         pricesStack.distribution = .fillEqually
         pricesStack.alignment = .center
 
-        mainStack = UIStackView(arrangedSubviews: [thumbnailImageView, nameLabel, pricesStack, stockLabel])
+        [thumbnailImageView, nameLabel, pricesStack, stockLabel].forEach { mainStack.addArrangedSubview($0) }
         mainStack.axis = .vertical
         mainStack.distribution = .equalSpacing
         mainStack.spacing = 8

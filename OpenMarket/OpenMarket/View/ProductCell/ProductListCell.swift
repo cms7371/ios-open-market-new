@@ -7,29 +7,32 @@
 
 import UIKit
 
-class ProductListCell: ProductCellBase, ProductCellLayoutDelegate {
+class ProductListCell: ProductCellBase {
 
     static let reuseIdentifier = "ProductListCell"
 
-    private var titleStockLabelStack: UIStackView!
-    private var priceLabelsStack: UIStackView!
-    private var labelStack: UIStackView!
-    private var mainStack: UIStackView!
-    private var separator: UIView!
+    private var titleStockLabelStack =  UIStackView()
+    private var priceLabelsStack =  UIStackView()
+    private var labelStack =  UIStackView()
+    private var mainStack =  UIStackView()
+    private var separator: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.lightGray
+        return view
+    }()
 
-    override func setLayoutDelegate() {
-        layoutDelegate = self
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureHierarchy()
+        configureConstraints()
     }
 
-    override func configureContent() {
-        super.configureContent()
-        separator = UIView()
-        separator.backgroundColor = UIColor.lightGray
-        self.addSubview(separator)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configureHierarchy() {
-        titleStockLabelStack = UIStackView(arrangedSubviews: [nameLabel, stockLabel, showDetailMark])
+        [nameLabel, stockLabel, showDetailMark].forEach { titleStockLabelStack.addArrangedSubview($0) }
         titleStockLabelStack.axis = .horizontal
         titleStockLabelStack.distribution = .fill
         titleStockLabelStack.alignment = .center
@@ -38,21 +41,21 @@ class ProductListCell: ProductCellBase, ProductCellLayoutDelegate {
         showDetailMark.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-        priceLabelsStack = UIStackView(arrangedSubviews: [priceLabel, discountedPriceLabel])
+        [priceLabel, discountedPriceLabel].forEach { priceLabelsStack.addArrangedSubview($0) }
         priceLabelsStack.axis = .horizontal
         priceLabelsStack.distribution = .fill
         priceLabelsStack.spacing = UIStackView.spacingUseSystem
         priceLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         priceLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
-        labelStack = UIStackView(arrangedSubviews: [titleStockLabelStack, priceLabelsStack])
+        [titleStockLabelStack, priceLabelsStack].forEach { labelStack.addArrangedSubview($0) }
         labelStack.axis = .vertical
         labelStack.distribution = .equalSpacing
         labelStack.alignment = .fill
         labelStack.spacing = 10
         labelStack.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        mainStack = UIStackView(arrangedSubviews: [thumbnailImageView, labelStack])
+        [thumbnailImageView, labelStack].forEach { mainStack.addArrangedSubview($0) }
         mainStack.axis = .horizontal
         mainStack.distribution = .fill
         mainStack.alignment = .center
@@ -60,6 +63,7 @@ class ProductListCell: ProductCellBase, ProductCellLayoutDelegate {
 
         self.addSubview(mainStack)
         self.addSubview(loadingIndicatorView)
+        self.addSubview(separator)
     }
 
     func configureConstraints() {

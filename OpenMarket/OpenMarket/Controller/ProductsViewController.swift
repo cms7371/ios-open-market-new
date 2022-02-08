@@ -1,87 +1,84 @@
 //
 //  OpenMarket - ViewController.swift
-//  Created by yagom. 
+//  Created by yagom.
 //  Copyright © yagom. All rights reserved.
-// 
+//
 
 import UIKit
 
 class ProductsViewController: UIViewController {
 
-    var displayStyleControlView: UISegmentedControl!
-    var collectionView: UICollectionView!
-
     var isList = true
     var products: [Product] = []
-    var dataSource: UICollectionViewDiffableDataSource<Section, Product>!
-    var dataSourceSnapshot: NSDiffableDataSourceSnapshot<Section, Product>!
 
-    enum Section {
+    var displayStyleControlView: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl(items: ["LIST", "GRID"])
+        segmentedControl.selectedSegmentTintColor = .systemBlue
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .normal)
+        segmentedControl.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+        segmentedControl.setWidth(80, forSegmentAt: 0)
+        segmentedControl.setWidth(80, forSegmentAt: 1)
+        segmentedControl.layer.borderWidth = 1.5
+        segmentedControl.layer.borderColor = UIColor.systemBlue.cgColor
+        return segmentedControl
+    }()
+
+    lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return collectionView
+    }()
+
+    lazy var collectionViewLayout = UICollectionViewCompositionalLayout { _, _ in
+        let column = self.isList ? 1 : 2
+        let groupHeight = self.isList ?
+            NSCollectionLayoutDimension.absolute(80) :
+            NSCollectionLayoutDimension.absolute(250)
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: groupHeight)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: column)
+        group.interItemSpacing = .fixed(8)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 8
+        if !self.isList {
+            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+        }
+        return section
+    }
+
+    enum CollectionViewSection {
         case main
     }
 
+    var dataSource: UICollectionViewDiffableDataSource<CollectionViewSection, Product>?
+    var dataSourceSnapshot: NSDiffableDataSourceSnapshot<CollectionViewSection, Product> = {
+        var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection, Product>()
+        snapshot.appendSections([.main])
+        return snapshot
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureDisplayStyleControlView()
         configureNavigationItem()
         configureHierarchy()
         configureDataSource()
     }
-}
-
-extension ProductsViewController {
-    func configureDisplayStyleControlView() {
-        displayStyleControlView = UISegmentedControl(items: ["LIST", "GRID"])
-        displayStyleControlView.selectedSegmentTintColor = .systemBlue
-        displayStyleControlView.selectedSegmentIndex = 0
-        displayStyleControlView.setTitleTextAttributes([.foregroundColor: UIColor.systemBlue], for: .normal)
-        displayStyleControlView.setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-        displayStyleControlView.setWidth(80, forSegmentAt: 0)
-        displayStyleControlView.setWidth(80, forSegmentAt: 1)
-        displayStyleControlView.layer.borderWidth = 1.5
-        displayStyleControlView.layer.borderColor = UIColor.systemBlue.cgColor
-        displayStyleControlView.addTarget(self, action:
-                                            #selector(changedValueDisplayStyleControlView(_:)), for: .valueChanged)
-    }
-
-    @objc private func changedValueDisplayStyleControlView(_ sender: Any) {
-        isList = displayStyleControlView.selectedSegmentIndex == 0
-        collectionView.reloadData()
-    }
 
     func configureNavigationItem() {
         navigationItem.titleView = displayStyleControlView
+        displayStyleControlView.addTarget(self, action: #selector(changedValueDisplayStyleControlView(_:)),
+                                          for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.init(systemName: "plus"),
                                                             style: .plain, target: self, action: nil)
     }
 
     func configureHierarchy() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(collectionView)
-    }
-
-    func createLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { _, _ in
-            let column = self.isList ? 1 : 2
-            let groupHeight = self.isList ?
-                NSCollectionLayoutDimension.absolute(80) :
-                NSCollectionLayoutDimension.absolute(250)
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: groupHeight)
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: column)
-            group.interItemSpacing = .fixed(8)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = 8
-            if !self.isList {
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
-            }
-            return section
-        }
     }
 
     func configureDataSource() {
@@ -101,9 +98,12 @@ extension ProductsViewController {
             collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: product) :
             collectionView.dequeueConfiguredReusableCell(using: gridCellRegistration, for: indexPath, item: product)
         })
-        dataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Product>()
-        dataSourceSnapshot.appendSections([.main])
         updateProducts()
+    }
+
+    @objc private func changedValueDisplayStyleControlView(_ sender: Any) {
+        isList = displayStyleControlView.selectedSegmentIndex == 0
+        collectionView.reloadData()
     }
 
     func updateProducts() {
@@ -113,7 +113,7 @@ extension ProductsViewController {
                 DispatchQueue.main.async {
                     self.products.append(contentsOf: productPage.products)
                     self.dataSourceSnapshot.appendItems(productPage.products)
-                    self.dataSource.apply(self.dataSourceSnapshot)
+                    self.dataSource?.apply(self.dataSourceSnapshot)
                 }
             } catch {
                 fatalError("ProductsViewController: JSON parsing error")
