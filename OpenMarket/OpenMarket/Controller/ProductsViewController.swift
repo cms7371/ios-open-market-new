@@ -8,10 +8,10 @@ import UIKit
 
 class ProductsViewController: UIViewController {
 
-    var isList = true
-    var products: [Product] = []
+    private var isList = true
+    private var products: [Product] = []
 
-    var displayStyleControlView: UISegmentedControl = {
+    private let displayStyleControlView: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: ["LIST", "GRID"])
         segmentedControl.selectedSegmentTintColor = .systemBlue
         segmentedControl.selectedSegmentIndex = 0
@@ -24,13 +24,13 @@ class ProductsViewController: UIViewController {
         return segmentedControl
     }()
 
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return collectionView
     }()
 
-    lazy var collectionViewLayout = UICollectionViewCompositionalLayout { _, _ in
+    private lazy var collectionViewLayout = UICollectionViewCompositionalLayout { _, _ in
         let column = self.isList ? 1 : 2
         let groupHeight = self.isList ?
             NSCollectionLayoutDimension.absolute(80) :
@@ -51,12 +51,12 @@ class ProductsViewController: UIViewController {
         return section
     }
 
-    enum CollectionViewSection {
+    private enum CollectionViewSection {
         case main
     }
 
-    var dataSource: UICollectionViewDiffableDataSource<CollectionViewSection, Product>?
-    var dataSourceSnapshot: NSDiffableDataSourceSnapshot<CollectionViewSection, Product> = {
+    private var dataSource: UICollectionViewDiffableDataSource<CollectionViewSection, Product>?
+    private var dataSourceSnapshot: NSDiffableDataSourceSnapshot<CollectionViewSection, Product> = {
         var snapshot = NSDiffableDataSourceSnapshot<CollectionViewSection, Product>()
         snapshot.appendSections([.main])
         return snapshot
@@ -69,19 +69,20 @@ class ProductsViewController: UIViewController {
         configureDataSource()
     }
 
-    func configureNavigationItem() {
+    private func configureNavigationItem() {
         navigationItem.titleView = displayStyleControlView
         displayStyleControlView.addTarget(self, action: #selector(changedValueDisplayStyleControlView(_:)),
                                           for: .valueChanged)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage.init(systemName: "plus"),
-                                                            style: .plain, target: self, action: nil)
+                                                            style: .plain, target: self,
+                                                            action: #selector(touchUpAddButton(_:)))
     }
 
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(collectionView)
     }
 
-    func configureDataSource() {
+    private func configureDataSource() {
         let listCellRegistration = UICollectionView
             .CellRegistration<ProductListCell, Product> { cell, indexPath, product in
                 cell.updateContent(product: product, indexPath: indexPath)
@@ -105,8 +106,12 @@ class ProductsViewController: UIViewController {
         isList = displayStyleControlView.selectedSegmentIndex == 0
         collectionView.reloadData()
     }
+    // TODO: Base가 아닌 구현체로 대체할 것
+    @objc private func touchUpAddButton(_ sender: Any) {
+        navigationController?.pushViewController(ProductEditViewControllerBase(), animated: true)
+    }
 
-    func updateProducts() {
+    private func updateProducts() {
         MarketAPI.getProducts(pageNumber: 1, itemCount: 100) { productsData in
             do {
                 let productPage: ProductPage = try JSONCoder.shared.decode(from: productsData)

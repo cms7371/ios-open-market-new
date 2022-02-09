@@ -11,11 +11,11 @@ class ProductListCell: ProductCellBase {
 
     static let reuseIdentifier = "ProductListCell"
 
-    private var titleStockLabelStack =  UIStackView()
-    private var priceLabelsStack =  UIStackView()
-    private var labelStack =  UIStackView()
-    private var mainStack =  UIStackView()
-    private var separator: UIView = {
+    private let titleStockLabelStack =  UIStackView()
+    private let priceLabelsStack =  UIStackView()
+    private let labelStack =  UIStackView()
+    private let mainStack =  UIStackView()
+    private let separator: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.lightGray
         return view

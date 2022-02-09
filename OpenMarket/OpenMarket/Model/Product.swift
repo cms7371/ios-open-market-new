@@ -40,7 +40,7 @@ struct Product: Decodable, Hashable {
         case vendor
     }
 
-    enum Currency: String, Decodable {
+    enum Currency: String, Decodable, CaseIterable {
         case koreanWon = "KRW"
         case usDollar = "USD"
     }

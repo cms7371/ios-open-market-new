@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3C0F80C090902155A487FA55 /* Pods_OpenMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 492015E18F7B1C4280613CD0 /* Pods_OpenMarket.framework */; };
+		C20D5A7327B363DB002CD471 /* ProductEditViewControllerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20D5A7227B363DB002CD471 /* ProductEditViewControllerBase.swift */; };
 		C239D745279E8BBA005E9BD7 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = C239D744279E8BBA005E9BD7 /* Product.swift */; };
 		C239D747279E913F005E9BD7 /* ProductImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C239D746279E913F005E9BD7 /* ProductImage.swift */; };
 		C239D749279E92A5005E9BD7 /* Vendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C239D748279E92A5005E9BD7 /* Vendor.swift */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		492015E18F7B1C4280613CD0 /* Pods_OpenMarket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OpenMarket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71EED637ACE0D73AD8C6A1D0 /* Pods-OpenMarket.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OpenMarket.release.xcconfig"; path = "Target Support Files/Pods-OpenMarket/Pods-OpenMarket.release.xcconfig"; sourceTree = "<group>"; };
+		C20D5A7227B363DB002CD471 /* ProductEditViewControllerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductEditViewControllerBase.swift; sourceTree = "<group>"; };
 		C239D744279E8BBA005E9BD7 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
 		C239D746279E913F005E9BD7 /* ProductImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductImage.swift; sourceTree = "<group>"; };
 		C239D748279E92A5005E9BD7 /* Vendor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vendor.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 		C239D73F279E6552005E9BD7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				C20D5A7227B363DB002CD471 /* ProductEditViewControllerBase.swift */,
 				C70FB0FE25BEF61C00C9924E /* ProductsViewController.swift */,
 				C70FB0FC25BEF61C00C9924E /* SceneDelegate.swift */,
 				C70FB0FA25BEF61C00C9924E /* AppDelegate.swift */,
@@ -368,6 +371,7 @@
 				C70FB0FB25BEF61C00C9924E /* AppDelegate.swift in Sources */,
 				C2BD596A27ACB6430085C43D /* UIViewPreview.swift in Sources */,
 				C2BD597527ACF0B80085C43D /* ProductGridCell.swift in Sources */,
+				C20D5A7327B363DB002CD471 /* ProductEditViewControllerBase.swift in Sources */,
 				C239D745279E8BBA005E9BD7 /* Product.swift in Sources */,
 				C70FB0FD25BEF61C00C9924E /* SceneDelegate.swift in Sources */,
 				C239D747279E913F005E9BD7 /* ProductImage.swift in Sources */,
@@ -570,13 +574,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 49J4JD2BU3;
 				INFOPLIST_FILE = OpenMarket/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.OpenMarket;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.OpenMarket11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -590,13 +595,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 49J4JD2BU3;
 				INFOPLIST_FILE = OpenMarket/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.OpenMarket;
+				PRODUCT_BUNDLE_IDENTIFIER = net.yagom.OpenMarket11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

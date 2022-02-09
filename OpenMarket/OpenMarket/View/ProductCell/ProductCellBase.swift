@@ -10,28 +10,28 @@ import CoreData
 
 class ProductCellBase: UICollectionViewCell {
 
-    var thumbnailImageView: UIImageView = UIImageView()
-    var loadingIndicatorView: UIActivityIndicatorView = {
+    let thumbnailImageView: UIImageView = UIImageView()
+    let loadingIndicatorView: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .medium)
         indicator.hidesWhenStopped = true
         indicator.startAnimating()
         return indicator
     }()
 
-    var nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
         return label
     }()
 
-    var priceLabel: UILabel = {
+    let priceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.textColor = UIColor.gray
         return label
     }()
 
-    var discountedPriceLabel: UILabel = {
+    let discountedPriceLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.textColor = UIColor.gray
@@ -39,20 +39,20 @@ class ProductCellBase: UICollectionViewCell {
         return label
     }()
 
-    var stockLabel: UILabel = {
+    let stockLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .body)
         label.textColor = UIColor.gray
         return label
     }()
 
-    var showDetailMark: UIImageView = {
+    let showDetailMark: UIImageView = {
         let imageView = UIImageView(image: UIImage.init(systemName: "chevron.right"))
         imageView.tintColor = .opaqueSeparator
         return imageView
     }()
 
-    var indexPath: IndexPath?
+    private var indexPath: IndexPath?
 
     func updateContent(product: Product, indexPath: IndexPath) {
         self.indexPath = indexPath

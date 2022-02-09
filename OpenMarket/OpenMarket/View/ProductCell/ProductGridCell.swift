@@ -9,10 +9,10 @@ import UIKit
 
 class ProductGridCell: ProductCellBase {
 
-    static var reuseIdentifier: String = "ProductGridCell"
+    static let reuseIdentifier: String = "ProductGridCell"
 
-    var mainStack = UIStackView()
-    var pricesStack = UIStackView()
+    private let mainStack = UIStackView()
+    private let pricesStack = UIStackView()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
