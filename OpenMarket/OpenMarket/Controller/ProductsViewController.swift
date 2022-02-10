@@ -24,32 +24,7 @@ class ProductsViewController: UIViewController {
         return segmentedControl
     }()
 
-    private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: self.collectionViewLayout)
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        return collectionView
-    }()
-
-    private lazy var collectionViewLayout = UICollectionViewCompositionalLayout { _, _ in
-        let column = self.isList ? 1 : 2
-        let groupHeight = self.isList ?
-            NSCollectionLayoutDimension.absolute(80) :
-            NSCollectionLayoutDimension.absolute(250)
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: groupHeight)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: column)
-        group.interItemSpacing = .fixed(8)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
-        if !self.isList {
-            section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
-        }
-        return section
-    }
+    private var collectionView: UICollectionView?
 
     private enum CollectionViewSection {
         case main
@@ -65,6 +40,7 @@ class ProductsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationItem()
+        configureRelationalContents()
         configureHierarchy()
         configureDataSource()
     }
@@ -78,8 +54,37 @@ class ProductsViewController: UIViewController {
                                                             action: #selector(touchUpAddButton(_:)))
     }
 
+    private func configureRelationalContents() {
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createCollectionViewLayout())
+        collectionView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+
     private func configureHierarchy() {
+        guard let collectionView = collectionView else { fatalError("Missing CollectionView") }
         view.addSubview(collectionView)
+    }
+
+    private func createCollectionViewLayout() -> UICollectionViewCompositionalLayout {
+        return UICollectionViewCompositionalLayout { _, _ in
+            let column = self.isList ? 1 : 2
+            let groupHeight = self.isList ?
+            NSCollectionLayoutDimension.absolute(80) :
+            NSCollectionLayoutDimension.absolute(250)
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: groupHeight)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: column)
+            group.interItemSpacing = .fixed(8)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = 8
+            if !self.isList {
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
+            }
+            return section
+        }
     }
 
     private func configureDataSource() {
@@ -93,6 +98,7 @@ class ProductsViewController: UIViewController {
                 cell.updateContent(product: product, indexPath: indexPath)
                 cell.lazyUpdateThumbnail(fromURL: product.thumbnailURLString, indexPath: indexPath)
         }
+        guard let collectionView = collectionView else { fatalError("Missing CollectionView") }
         dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
                                                         cellProvider: { collectionView, indexPath, product in
             return self.isList ?
@@ -104,7 +110,7 @@ class ProductsViewController: UIViewController {
 
     @objc private func changedValueDisplayStyleControlView(_ sender: Any) {
         isList = displayStyleControlView.selectedSegmentIndex == 0
-        collectionView.reloadData()
+        collectionView?.reloadData()
     }
 
     @objc private func touchUpAddButton(_ sender: Any) {

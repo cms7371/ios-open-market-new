@@ -20,9 +20,8 @@ class ProductEditViewControllerBase: UIViewController {
         return field
     }()
 
-    lazy var priceField: UITextField = {
+    let priceField: UITextField = {
         let field = UITextField()
-        field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
         field.placeholder = "상품가격"
         field.keyboardType = .numberPad
@@ -36,18 +35,16 @@ class ProductEditViewControllerBase: UIViewController {
     }()
 
     let priceCurrencyStackView = UIStackView()
-    lazy var bargainPriceField: UITextField = {
+    let bargainPriceField: UITextField = {
         let field = UITextField()
-        field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
         field.placeholder = "할인금액"
         field.keyboardType = .numberPad
         return field
     }()
 
-    lazy var stockField: UITextField = {
+    let stockField: UITextField = {
         let field = UITextField()
-        field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
         field.placeholder = "재고수량"
         field.keyboardType = .numberPad
@@ -67,6 +64,7 @@ class ProductEditViewControllerBase: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .systemBackground
         configureNavigationItems()
+        configureContentRelationalProperties()
         configureHierarchy()
         configureConstraints()
     }
@@ -75,6 +73,12 @@ class ProductEditViewControllerBase: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain,
                                                            target: self, action: #selector(touchUpCancelButton(_:)))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: nil)
+    }
+
+    func configureContentRelationalProperties() {
+        priceField.delegate = numberTextFieldDelegate
+        bargainPriceField.delegate = numberTextFieldDelegate
+        stockField.delegate = numberTextFieldDelegate
     }
 
     func configureHierarchy() {

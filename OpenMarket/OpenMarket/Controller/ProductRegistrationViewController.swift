@@ -10,17 +10,21 @@ import PhotosUI
 
 class ProductRegistrationViewController: ProductEditViewControllerBase, UINavigationControllerDelegate {
 
-    private lazy var addImageButton: UIButton = {
+    private let addImageButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .systemGray5
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.addTarget(self, action: #selector(self.touchUpAddImageButton(_:)), for: .touchUpInside)
         return button
     }()
 
     override func configureNavigationItems() {
         super.configureNavigationItems()
         navigationItem.title = "상품등록"
+    }
+
+    override func configureContentRelationalProperties() {
+        super.configureContentRelationalProperties()
+        addImageButton.addTarget(self, action: #selector(self.touchUpAddImageButton(_:)), for: .touchUpInside)
     }
 
     override func configureHierarchy() {
