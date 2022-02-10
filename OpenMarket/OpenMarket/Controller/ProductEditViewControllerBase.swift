@@ -11,16 +11,16 @@ class ProductEditViewControllerBase: UIViewController {
 
     private var numberTextFieldDelegate = NumberTextFieldDelegate()
 
-    private let imageStackView: UIStackView = UIStackView()
+    let imageStackView: UIStackView = UIStackView()
     private let imageScrollView: UIScrollView = UIScrollView()
-    private let nameField: UITextField = {
+    let nameField: UITextField = {
         let field = UITextField()
         field.borderStyle = .roundedRect
         field.placeholder = "상품명"
         return field
     }()
 
-    lazy private var priceField: UITextField = {
+    lazy var priceField: UITextField = {
         let field = UITextField()
         field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
@@ -29,14 +29,14 @@ class ProductEditViewControllerBase: UIViewController {
         return field
     }()
 
-    private let currencySegmentedControl: UISegmentedControl = {
+    let currencySegmentedControl: UISegmentedControl = {
         let control = UISegmentedControl(items: Product.Currency.allCases.map { $0.rawValue })
         control.selectedSegmentIndex = 0
         return control
     }()
 
-    private let priceCurrencyStackView = UIStackView()
-    lazy private var bargainPriceField: UITextField = {
+    let priceCurrencyStackView = UIStackView()
+    lazy var bargainPriceField: UITextField = {
         let field = UITextField()
         field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
@@ -45,7 +45,7 @@ class ProductEditViewControllerBase: UIViewController {
         return field
     }()
 
-    lazy private var stockField: UITextField = {
+    lazy var stockField: UITextField = {
         let field = UITextField()
         field.delegate = numberTextFieldDelegate
         field.borderStyle = .roundedRect
@@ -54,7 +54,7 @@ class ProductEditViewControllerBase: UIViewController {
         return field
     }()
 
-    private let descriptionTextView: UITextView = {
+    let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.text = String(repeating: "example\n", count: 100)
         textView.font = UIFont.preferredFont(forTextStyle: .body)
@@ -71,16 +71,17 @@ class ProductEditViewControllerBase: UIViewController {
         configureConstraints()
     }
 
-    private func configureNavigationItems() {
+    func configureNavigationItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain,
                                                            target: self, action: #selector(touchUpCancelButton(_:)))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: nil)
     }
 
-    private func configureHierarchy() {
+    func configureHierarchy() {
         imageStackView.axis = .horizontal
-        imageStackView.alignment = .top
+        imageStackView.alignment = .fill
         imageStackView.distribution = .equalSpacing
+        imageStackView.spacing = 8
 
         imageScrollView.showsHorizontalScrollIndicator = false
         imageScrollView.addSubview(imageStackView)
@@ -103,7 +104,7 @@ class ProductEditViewControllerBase: UIViewController {
         view.addSubview(mainStackView)
     }
 
-    private func configureConstraints() {
+    func configureConstraints() {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

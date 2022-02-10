@@ -26,7 +26,7 @@ class ProductGridCell: ProductCellBase {
     }
 
     func configureOutline() {
-        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderColor = UIColor.systemGray4.cgColor
         self.layer.borderWidth = 2.0
         self.layer.cornerRadius = 5
     }

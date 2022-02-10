@@ -17,7 +17,7 @@ class ProductListCell: ProductCellBase {
     private let mainStack =  UIStackView()
     private let separator: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.lightGray
+        view.backgroundColor = UIColor.systemGray4
         return view
     }()
 

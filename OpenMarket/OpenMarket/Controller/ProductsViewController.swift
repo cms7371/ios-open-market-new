@@ -25,7 +25,7 @@ class ProductsViewController: UIViewController {
     }()
 
     private lazy var collectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
+        let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: self.collectionViewLayout)
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         return collectionView
     }()
@@ -106,9 +106,9 @@ class ProductsViewController: UIViewController {
         isList = displayStyleControlView.selectedSegmentIndex == 0
         collectionView.reloadData()
     }
-    // TODO: Base가 아닌 구현체로 대체할 것
+
     @objc private func touchUpAddButton(_ sender: Any) {
-        navigationController?.pushViewController(ProductEditViewControllerBase(), animated: true)
+        navigationController?.pushViewController(ProductRegistrationViewController(), animated: true)
     }
 
     private func updateProducts() {
